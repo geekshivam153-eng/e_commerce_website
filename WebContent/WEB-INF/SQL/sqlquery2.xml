@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queries>
+    <!-- Insert an order item. Product IDs in the legacy UI use the cdNNN format. -->
+    <sqlQuery id="0" noOfParams="5">
+        <sqlQueryString>INSERT INTO order_items (order_id, cd_id, unit_price, quantity) VALUES ('P0', CAST(REPLACE('P1', 'cd', '') AS UNSIGNED), 'P2', 'P3')</sqlQueryString>
+    </sqlQuery>
+
+    <!-- Product list by category name. -->
+    <sqlQuery id="1" noOfParams="1">
+        <sqlQueryString>SELECT CONCAT('cd', LPAD(c.cd_id, 3, '0')) AS cdid, c.title, c.price, c.title AS details FROM cds c JOIN categories cat ON cat.category_id = c.category_id WHERE cat.name = 'P0'</sqlQueryString>
+    </sqlQuery>
+
+    <!-- Login against the users table in the local cd_store schema. -->
+    <sqlQuery id="2" noOfParams="2">
+        <sqlQueryString>SELECT user_id AS userid, full_name AS FirstName, '' AS LastName, email, password_hash AS password, '' AS phoneno, '' AS paymentmode FROM users WHERE email = 'P0' AND password_hash = 'P1'</sqlQueryString>
+    </sqlQuery>
+
+    <!-- Create/update a user account using the current users schema. -->
+    <sqlQuery id="3" noOfParams="10">
+        <sqlQueryString>INSERT INTO users (email, password_hash, full_name) VALUES ('P6', 'P1', CONCAT('P4', ' ', 'P5')) ON DUPLICATE KEY UPDATE user_id = LAST_INSERT_ID(user_id)</sqlQueryString>
+    </sqlQuery>
+    <sqlQuery id="4" noOfParams="0">
+        <sqlQueryString>SELECT 1</sqlQueryString>
+    </sqlQuery>
+    <sqlQuery id="5" noOfParams="1">
+        <sqlQueryString>SELECT user_id FROM users WHERE email = 'P0'</sqlQueryString>
+    </sqlQuery>
+    <sqlQuery id="6" noOfParams="0">
+        <sqlQueryString>SELECT 1</sqlQueryString>
+    </sqlQuery>
+    <sqlQuery id="7" noOfParams="0">
+        <sqlQueryString>SELECT 1</sqlQueryString>
+    </sqlQuery>
+    <sqlQuery id="8" noOfParams="0">
+        <sqlQueryString>SELECT name AS category FROM categories ORDER BY name</sqlQueryString>
+    </sqlQuery>
+    <sqlQuery id="9" noOfParams="0">
+        <sqlQueryString>SELECT 1</sqlQueryString>
+    </sqlQuery>
+    <sqlQuery id="10" noOfParams="1">
+        <sqlQueryString>SELECT user_id AS userid FROM users WHERE email = 'P0'</sqlQueryString>
+    </sqlQuery>
+
+    <!-- The current schema does not store addresses; preserve the legacy result shape. -->
+    <sqlQuery id="11" noOfParams="1">
+        <sqlQueryString>SELECT user_id AS addressid FROM users WHERE user_id = 'P0'</sqlQueryString>
+    </sqlQuery>
+    <sqlQuery id="12" noOfParams="1">
+        <sqlQueryString>SELECT user_id AS id, '' AS street, '' AS province, '' AS country, '' AS zip FROM users WHERE user_id = 'P0'</sqlQueryString>
+    </sqlQuery>
+
+    <!-- Look up a user's most recent order. -->
+    <sqlQuery id="13" noOfParams="2">
+        <sqlQueryString>SELECT o.order_id AS id FROM orders o JOIN users u ON u.user_id = o.user_id WHERE u.email = 'P1' ORDER BY o.order_id DESC LIMIT 1</sqlQueryString>
+    </sqlQuery>
+    <sqlQuery id="14" noOfParams="5">
+        <sqlQueryString>INSERT INTO orders (user_id, total_amount) SELECT user_id, 0 FROM users WHERE email = 'P4' ORDER BY user_id DESC LIMIT 1</sqlQueryString>
+    </sqlQuery>
+    <sqlQuery id="15" noOfParams="1">
+        <sqlQueryString>SELECT CONCAT('cd', LPAD(cd_id, 3, '0')) AS cdid FROM order_items WHERE order_id = 'P0'</sqlQueryString>
+    </sqlQuery>
+    <sqlQuery id="16" noOfParams="2">
+        <sqlQueryString>SELECT quantity FROM order_items WHERE order_id = 'P0' AND cd_id = CAST(REPLACE('P1', 'cd', '') AS UNSIGNED)</sqlQueryString>
+    </sqlQuery>
+    <sqlQuery id="17" noOfParams="3">
+        <sqlQueryString>UPDATE order_items SET quantity = 'P0' WHERE order_id = 'P1' AND cd_id = CAST(REPLACE('P2', 'cd', '') AS UNSIGNED)</sqlQueryString>
+    </sqlQuery>
+    <sqlQuery id="18" noOfParams="1">
+        <sqlQueryString>SELECT CONCAT('cd', LPAD(oi.cd_id, 3, '0')) AS cdid, c.title, oi.unit_price AS price, oi.quantity FROM order_items oi JOIN cds c ON c.cd_id = oi.cd_id WHERE oi.order_id = 'P0'</sqlQueryString>
+    </sqlQuery>
+    <sqlQuery id="19" noOfParams="5">
+        <sqlQueryString>SELECT 1</sqlQueryString>
+    </sqlQuery>
+    <sqlQuery id="20" noOfParams="4">
+        <sqlQueryString>INSERT INTO orders (user_id, total_amount) SELECT user_id, 0 FROM users WHERE email = 'P2' ORDER BY user_id DESC LIMIT 1</sqlQueryString>
+    </sqlQuery>
+    <sqlQuery id="21" noOfParams="3">
+        <sqlQueryString>UPDATE orders SET total_amount = total_amount WHERE user_id = (SELECT user_id FROM users WHERE email = 'P1' LIMIT 1)</sqlQueryString>
+    </sqlQuery>
+    <sqlQuery id="22" noOfParams="0">
+        <sqlQueryString>SELECT 1</sqlQueryString>
+    </sqlQuery>
+    <sqlQuery id="23" noOfParams="0">
+        <sqlQueryString>SELECT 1</sqlQueryString>
+    </sqlQuery>
+    <sqlQuery id="24" noOfParams="2">
+        <sqlQueryString>DELETE FROM order_items WHERE order_id = 'P0' AND cd_id = CAST(REPLACE('P1', 'cd', '') AS UNSIGNED)</sqlQueryString>
+    </sqlQuery>
+    <sqlQuery id="25" noOfParams="1">
+        <sqlQueryString>SELECT title AS details FROM cds WHERE cd_id = CAST(REPLACE('P0', 'cd', '') AS UNSIGNED)</sqlQueryString>
+    </sqlQuery>
+</queries>

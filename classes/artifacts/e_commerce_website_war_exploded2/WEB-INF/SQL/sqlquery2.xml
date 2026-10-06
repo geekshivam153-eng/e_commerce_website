@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queries>
+    <!-- Placeholder for query index 0; used by other application features. -->
+    <sqlQuery id="0" noOfParams="0">
+        <sqlQueryString>SELECT 1</sqlQueryString>
+    </sqlQuery>
+
+    <!-- Placeholder for query index 1; used by other application features. -->
+    <sqlQuery id="1" noOfParams="0">
+        <sqlQueryString>SELECT 1</sqlQueryString>
+    </sqlQuery>
+
+    <!-- Login: expects userid, FirstName, LastName, email, password, phoneno, paymentmode. -->
+    <sqlQuery id="2" noOfParams="2">
+        <sqlQueryString>SELECT userid, FirstName, LastName, email, password, phoneno, paymentmode FROM Users WHERE email = 'P0' AND password = 'P1'</sqlQueryString>
+    </sqlQuery>
+
+    <!-- Placeholder for query indexes 3 through 10; used by other application features. -->
+    <sqlQuery id="3" noOfParams="0">
+        <sqlQueryString>SELECT 1</sqlQueryString>
+    </sqlQuery>
+    <sqlQuery id="4" noOfParams="0">
+        <sqlQueryString>SELECT 1</sqlQueryString>
+    </sqlQuery>
+    <sqlQuery id="5" noOfParams="0">
+        <sqlQueryString>SELECT 1</sqlQueryString>
+    </sqlQuery>
+    <sqlQuery id="6" noOfParams="0">
+        <sqlQueryString>SELECT 1</sqlQueryString>
+    </sqlQuery>
+    <sqlQuery id="7" noOfParams="0">
+        <sqlQueryString>SELECT 1</sqlQueryString>
+    </sqlQuery>
+    <sqlQuery id="8" noOfParams="0">
+        <sqlQueryString>SELECT 1</sqlQueryString>
+    </sqlQuery>
+    <sqlQuery id="9" noOfParams="0">
+        <sqlQueryString>SELECT 1</sqlQueryString>
+    </sqlQuery>
+    <sqlQuery id="10" noOfParams="0">
+        <sqlQueryString>SELECT 1</sqlQueryString>
+    </sqlQuery>
+
+    <!-- Load the user's address ID. -->
+    <sqlQuery id="11" noOfParams="1">
+        <sqlQueryString>SELECT addressid FROM UserAddress WHERE userid = 'P0'</sqlQueryString>
+    </sqlQuery>
+
+    <!-- Load the address fields expected by UserLogin.login(). -->
+    <sqlQuery id="12" noOfParams="1">
+        <sqlQueryString>SELECT id, street, province, country, zip FROM Address WHERE id = 'P0'</sqlQueryString>
+    </sqlQuery>
+</queries>

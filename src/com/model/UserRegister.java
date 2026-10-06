@@ -12,63 +12,27 @@ public class UserRegister {
 	
 	//create account for the new user
 	public String createAccount(User user){
-		
-		   String addressid = null;
-		   String userid = null;
-	   
-		   long millis=System.currentTimeMillis();
-	       Date date = new Date(millis);
-	       SimpleDateFormat sdf =  new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	        
-	       DBAgent dba = new DBAgent("/SQL/DB.xml","/SQL/sqlquery2.xml");
-	        
-	       String checkAddree[] ={user.getPincode()};
-	       ResultSet rs2 = dba.getResults(9, checkAddree);
-		   try {
-			if(!rs2.next()){
-				   String address[]={user.getStreet(),user.getProvince(), user.getCountry(),user.getPincode()};	
-				   dba.executeSQL(6, address);	
-				   dba.closeConnection();
-			   }
-		  } catch (SQLException e1) {
-			e1.printStackTrace();
-		  }			
-	       
-		   String parameter[] = {user.getFirstname(), user.getPassword(),sdf.format(date),"true",user.getFirstname(),user.getLastname(),
-				   user.getEmail(),user.getPhoneno(),"0",user.getPayment()};
-		   dba.executeSQL(3, parameter);
-		   dba.closeConnection();
-			
-		   String adrsid[] = {user.getPincode()};
-		   ResultSet rs = dba.getResults(9, adrsid);
-		   try {
-			while(rs.next()){   
-			addressid = Integer.toString(rs.getInt("id"));
-			user.setAddressid(addressid);
+		DBAgent dba = new DBAgent("/SQL/DB.xml", "/SQL/sqlquery2.xml");
+		String[] parameters = {
+				user.getFirstname(), user.getPassword(), "", "", user.getFirstname(),
+				user.getLastname(), user.getEmail(), user.getPhoneno(), "0", user.getPayment()
+		};
+		dba.executeSQL(3, parameters);
+		dba.closeConnection();
+
+		ResultSet result = dba.getResults(10, new String[] {user.getEmail()});
+		try {
+			if (result.next()) {
+				user.setUserid(Integer.toString(result.getInt("userid")));
+				dba.closeConnection();
+				return "success";
 			}
-			dba.closeConnection();
 		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		   
-		   String uid[] = {user.getEmail()};
-		   ResultSet rs1 = dba.getResults(10, uid);
-		   try {
-			while(rs1.next()){   
-			userid = Integer.toString(rs1.getInt("userid"));
-			user.setUserid(userid);
-			}
 			dba.closeConnection();
-		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new IllegalStateException("Unable to load the newly registered user", e);
 		}
-		    
-		 String useraddress[]={addressid,userid};
-		 dba.executeSQL(7, useraddress);
-		 dba.closeConnection();
-		
-		return "success";
-			
+		dba.closeConnection();
+		return "fail";
 	}
 	
 	//create account for the new user while checkout

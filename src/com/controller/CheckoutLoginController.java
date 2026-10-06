@@ -34,17 +34,17 @@ private static final long serialVersionUID = 1L;
 		email = request.getParameter("email");
 		password = request.getParameter("password");
 		
-		user = userLogin.login( email, password);
+		user = userLogin.checkoutlogin(email, password);
 		
 		response.setContentType("text/html");  
 		HttpSession session = request.getSession();
-	    		 
-		if(!(user==null)){
-			session.setAttribute("User", user); 
-			request.getRequestDispatcher("Index.jsp").forward(request, response);
+	    	 	 
+		if(user != null){
+			session.setAttribute("User", user);
+			response.sendRedirect("Checkout.jsp");
 		}else{
 			session.setAttribute("LoginDenied", "Email and password doesnot match"); 
-			request.getRequestDispatcher("Login.jsp").forward(request, response);
+			request.getRequestDispatcher("CheckoutLogin.jsp").forward(request, response);
 		}
 	}
 	

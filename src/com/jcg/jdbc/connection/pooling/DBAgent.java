@@ -98,7 +98,7 @@ public class DBAgent {
 		setupParameters(sv,sql);
 		
 		//Read the SQL messages and replace the parameters in the string.
-		setSqlQueriesToRun(retrieveQueries(this.pathToQueries)); //set the list of queries from the file.
+		setSqlQueriesToRun(retrieveQueries(this.pathToQueries));
 		
 		//Start the connectionPool
 		try {
@@ -113,8 +113,8 @@ public class DBAgent {
 	private void setupParameters(String pathToSv, String pathToSQL )
 	{
 		db = new DB();
-		setPathToServer(pathToSv);
-		setPathToQueries(pathToSQL);
+		setPathToServer(resolveConfigurationFile(pathToSv).getPath());
+		setPathToQueries(resolveConfigurationFile(pathToSQL).getPath());
 		
 		//Read DB parameters from specified file and storing in the DB Class
 		 try{
@@ -131,9 +131,47 @@ public class DBAgent {
             }
 	      catch(JAXBException ex)
 	        {
-	        	ex.printStackTrace();
+            throw new IllegalStateException("Unable to read database configuration from "
+                    + getPathToServer(), ex);
 	        }
 			
+	}
+
+	private File resolveConfigurationFile(String path)
+	{
+		String relativePath = path.replace('\\', '/');
+		while (relativePath.startsWith("/")) {
+			relativePath = relativePath.substring(1);
+		}
+
+		File requestedFile = new File(path);
+		if (requestedFile.isFile()) {
+			return requestedFile;
+		}
+
+		File projectDirectory = new File(System.getProperty("user.dir"));
+		File[] candidates = {
+				new File(projectDirectory, relativePath),
+				new File(projectDirectory, "WebContent/WEB-INF/" + relativePath),
+				new File(projectDirectory, "WEB-INF/" + relativePath),
+				new File(projectDirectory, "WebContent/" + relativePath),
+				new File(projectDirectory, "src/" + relativePath)
+		};
+
+		StringBuilder checkedPaths = new StringBuilder();
+		for (File candidate : candidates) {
+			if (candidate.isFile()) {
+				return candidate;
+			}
+			if (checkedPaths.length() > 0) {
+				checkedPaths.append(", ");
+			}
+			checkedPaths.append(candidate.getAbsolutePath());
+		}
+
+		throw new IllegalArgumentException("Configuration file '" + path
+				+ "' was not found. Checked: " + checkedPaths
+				+ ". Add the required file to WebContent/WEB-INF/SQL.");
 	}
 		
 	//retrieve SQLQueries
@@ -174,10 +212,10 @@ public class DBAgent {
 	    	   return sqlQueries;
 	       }
 	       catch(Exception ex)
-	    	   {
-	    		   ex.printStackTrace();
-	    		   return sqlQueries;
-	    	   }
+           {
+               throw new IllegalStateException("Unable to read SQL queries from "
+                       + pathToSQL, ex);
+           }
 	}
 	
 
@@ -235,8 +273,7 @@ public class DBAgent {
 		}
 		catch(Exception ex)
 		{
-			ex.printStackTrace();
-			return null;
+			throw new IllegalStateException("Failed to execute SQL query at index " + queryId, ex);
 		}
 	}
 	
@@ -274,9 +311,8 @@ public class DBAgent {
 		}
 		catch(Exception ex)
 		{
-			ex.printStackTrace();
+			throw new IllegalStateException("Failed to execute SQL update at index " + queryId, ex);
 		}
-		return 0;
 	
 	}
 	
@@ -303,5 +339,3 @@ public class DBAgent {
 	}
 
 }
-
-

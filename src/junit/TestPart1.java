@@ -82,6 +82,7 @@ public class TestPart1 {
 	@Test
 	public void testUpdateCart(){
 		Cart cart = new Cart();
+		assertTrue(cart.pickUp("cd013", "ROYALTY", "16", "1", accountInfo));
 		boolean test = cart.updateQuantity("cd013", accountInfo.getEmail());
 		assertTrue(test);
 		

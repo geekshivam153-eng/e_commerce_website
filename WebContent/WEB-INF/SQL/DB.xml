@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db>
+    <jdbcdriver>com.mysql.cj.jdbc.Driver</jdbcdriver>
+    <jdbcdburl>jdbc:mysql://localhost:3306/cd_store?useSSL=false&amp;serverTimezone=UTC</jdbcdburl>
+    <jdbcuser>root</jdbcuser>
+    <jdbcpwd>1122</jdbcpwd>
+</db>
